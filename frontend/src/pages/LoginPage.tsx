@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Header } from '../components/Header';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -55,25 +54,27 @@ export const LoginPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="app-container">
-      <Header />
-      <div className="card" style={{ maxWidth: '400px', margin: '40px auto' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Welcome to ClassAnnounce</h2>
-        
+    <div className="auth-page">
+      <div className="auth-card fade-in">
         {sent ? (
-          <div style={{ padding: '16px', background: '#F0FDF4', borderRadius: '8px', textAlign: 'center' }}>
-            <p style={{ fontWeight: 500, marginBottom: '8px', color: '#166534' }}>
-              ✓ Magic link sent!
+          <>
+            <div className="success-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-center">Magic Link Sent!</h2>
+            <p className="text-muted text-center mb-4">
+              We've sent a login link to <strong>{email}</strong>
             </p>
-            <p className="text-small text-muted">
-              Check your email for the login link. In development mode, the link is logged to console.
+            <p className="text-small text-muted text-center">
+              Check your email and click the link to sign in. The link expires in 15 minutes.
             </p>
-          </div>
+          </>
         ) : (
           <>
-            <p className="text-muted" style={{ textAlign: 'center', marginBottom: '24px' }}>
-              Enter your email to receive a magic link for passwordless login
-            </p>
+            <h2 className="auth-logo">ClassAnnounce</h2>
+            <p className="auth-subtitle">Welcome back! Enter your email to sign in.</p>
 
             {error && <div className="alert alert-error">{error}</div>}
 
@@ -85,22 +86,30 @@ export const LoginPage: React.FC = () => {
                   className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="student@college.edu"
+                  placeholder="you@example.com"
                   required
+                  disabled={loading}
                 />
               </div>
               <button 
                 type="submit" 
-                className="btn btn-primary" 
-                style={{ width: '100%' }}
+                className="btn btn-primary w-full" 
                 disabled={loading}
               >
-                {loading ? 'Sending...' : 'Send Magic Link'}
+                {loading ? (
+                  <span className="flex-center gap-2">
+                    <span className="spinner" style={{ padding: 0, width: 20, height: 20 }}></span>
+                    Sending...
+                  </span>
+                ) : (
+                  'Send Magic Link'
+                )}
               </button>
             </form>
 
-            <p className="text-small text-muted" style={{ textAlign: 'center', marginTop: '16px' }}>
-              Don't have an account? <Link to="/register">Register here</Link>
+            <p className="text-small text-muted text-center mt-4">
+              Don't have an account?{' '}
+              <Link to="/register" className="link">Register here</Link>
             </p>
           </>
         )}

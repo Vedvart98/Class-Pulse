@@ -133,7 +133,7 @@ export const AdminPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="spinner"></div>;
+    return <div className="app-container"><div className="spinner"></div></div>;
   }
 
   if (!user || user.role !== 'ADMIN') {
@@ -143,187 +143,214 @@ export const AdminPage: React.FC = () => {
   return (
     <div className="app-container">
       <Header />
-      <div className="flex flex-between mb-4">
-        <h1>Admin Panel</h1>
-      </div>
+      <div className="fade-in">
+        <div className="flex flex-between mb-4">
+          <h1>Admin Panel</h1>
+        </div>
 
-      <div className="tabs mb-4">
-        <button
-          className={`tab ${activeTab === 'announcements' ? 'active' : ''}`}
-          onClick={() => setActiveTab('announcements')}
-        >
-          Announcements
-        </button>
-        <button
-          className={`tab ${activeTab === 'students' ? 'active' : ''}`}
-          onClick={() => setActiveTab('students')}
-        >
-          Students
-        </button>
-      </div>
+        <div className="tabs">
+          <button
+            className={`tab ${activeTab === 'announcements' ? 'active' : ''}`}
+            onClick={() => setActiveTab('announcements')}
+          >
+            Announcements
+          </button>
+          <button
+            className={`tab ${activeTab === 'students' ? 'active' : ''}`}
+            onClick={() => setActiveTab('students')}
+          >
+            Students
+          </button>
+        </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
+        {error && <div className="alert alert-error">{error}</div>}
 
-      {activeTab === 'announcements' && (
-        <>
-          <div className="flex flex-between mb-4">
-            <button 
-              onClick={() => { setShowForm(!showForm); setEditingId(null); setFormData({ title: '', content: '', priority: 'MEDIUM' }); }}
-              className="btn btn-primary"
-            >
-              {showForm ? 'Cancel' : 'Create Announcement'}
-            </button>
-          </div>
-
-          {showForm && (
-            <div className="card mb-4">
-              <h2>{editingId ? 'Edit Announcement' : 'New Announcement'}</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label>Title</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Content</label>
-                  <textarea
-                    className="input textarea"
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Priority</label>
-                  <select
-                    className="select"
-                    value={formData.priority}
-                    onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  >
-                    <option value="LOW">Low</option>
-                    <option value="MEDIUM">Medium</option>
-                    <option value="HIGH">High</option>
-                  </select>
-                </div>
-                <button type="submit" className="btn btn-primary" disabled={saving}>
-                  {saving ? 'Saving...' : editingId ? 'Update' : 'Create'}
-                </button>
-              </form>
+        {activeTab === 'announcements' && (
+          <>
+            <div className="flex flex-between mb-4">
+              <button 
+                onClick={() => { setShowForm(!showForm); setEditingId(null); setFormData({ title: '', content: '', priority: 'MEDIUM' }); }}
+                className="btn btn-primary"
+              >
+                {showForm ? 'Cancel' : '+ New Announcement'}
+              </button>
             </div>
-          )}
 
-          {fetching && <div className="spinner"></div>}
-
-          {!fetching && announcements.map((announcement) => (
-            <div key={announcement.id} className="card">
-              <div className="flex flex-between mb-4">
-                <h3 style={{ margin: 0 }}>{announcement.title}</h3>
-                <span className={`priority-badge priority-${announcement.priority.toLowerCase()}`}>
-                  {announcement.priority}
-                </span>
+            {showForm && (
+              <div className="card mb-4 fade-in">
+                <h2>{editingId ? 'Edit Announcement' : 'New Announcement'}</h2>
+                <form onSubmit={handleSubmit}>
+                  <div className="form-group">
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      className="input"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Content</label>
+                    <textarea
+                      className="input textarea"
+                      value={formData.content}
+                      onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Priority</label>
+                    <select
+                      className="select"
+                      value={formData.priority}
+                      onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                    >
+                      <option value="LOW">Low</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HIGH">High</option>
+                    </select>
+                  </div>
+                  <div className="flex gap-2">
+                    <button type="submit" className="btn btn-primary" disabled={saving}>
+                      {saving ? 'Saving...' : editingId ? 'Update' : 'Create'}
+                    </button>
+                    <button 
+                      type="button" 
+                      className="btn btn-outline" 
+                      onClick={() => { setShowForm(false); setEditingId(null); }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
               </div>
-              <p className="text-muted mb-4" style={{ whiteSpace: 'pre-wrap' }}>{announcement.content}</p>
-              <div className="flex flex-between">
-                <span className="text-small text-muted">
-                  By {announcement.createdByName} • {new Date(announcement.createdAt).toLocaleDateString()}
-                </span>
-                <div className="flex gap-2">
-                  <button onClick={() => handleEdit(announcement)} className="btn btn-outline" style={{ padding: '4px 8px', fontSize: '12px' }}>
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(announcement.id)} className="btn btn-danger" style={{ padding: '4px 8px', fontSize: '12px' }}>
-                    Delete
-                  </button>
+            )}
+
+            {fetching && <div className="spinner"></div>}
+
+            {!fetching && announcements.map((announcement) => (
+              <div key={announcement.id} className="card" style={{ 
+                borderLeft: announcement.priority === 'HIGH' ? '3px solid #EF4444' : 
+                       announcement.priority === 'MEDIUM' ? '3px solid #F59E0B' : '3px solid #10B981'
+              }}>
+                <div className="flex flex-between mb-2">
+                  <h3 style={{ margin: 0, flex: 1 }}>{announcement.title}</h3>
+                  <span className={`priority-badge priority-${announcement.priority.toLowerCase()}`}>
+                    {announcement.priority}
+                  </span>
+                </div>
+                <p className="text-muted mb-4" style={{ whiteSpace: 'pre-wrap' }}>{announcement.content}</p>
+                <div className="flex flex-between">
+                  <span className="text-small text-muted">
+                    By {announcement.createdByName} • {new Date(announcement.createdAt).toLocaleDateString()}
+                  </span>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleEdit(announcement)} className="btn btn-outline" style={{ padding: '6px 12px', fontSize: 13 }}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(announcement.id)} className="btn btn-danger" style={{ padding: '6px 12px', fontSize: 13 }}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))}
+          </>
+        )}
+
+        {activeTab === 'students' && (
+          <>
+            <div className="flex flex-between mb-4">
+              <button 
+                onClick={() => { setShowForm(!showForm); setStudentForm({ name: '', email: '' }); }}
+                className="btn btn-primary"
+              >
+                {showForm ? 'Cancel' : '+ Add Student'}
+              </button>
             </div>
-          ))}
-        </>
-      )}
 
-      {activeTab === 'students' && (
-        <>
-          <div className="flex flex-between mb-4">
-            <button 
-              onClick={() => { setShowForm(!showForm); setStudentForm({ name: '', email: '' }); }}
-              className="btn btn-primary"
-            >
-              {showForm ? 'Cancel' : 'Add Student'}
-            </button>
-          </div>
+            {showForm && (
+              <div className="card mb-4 fade-in">
+                <h2>New Student</h2>
+                <form onSubmit={handleStudentSubmit}>
+                  <div className="form-group">
+                    <label>Name</label>
+                    <input
+                      type="text"
+                      className="input"
+                      value={studentForm.name}
+                      onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      className="input"
+                      value={studentForm.email}
+                      onChange={(e) => setStudentForm({ ...studentForm, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <button type="submit" className="btn btn-primary" disabled={saving}>
+                      {saving ? 'Creating...' : 'Create'}
+                    </button>
+                    <button 
+                      type="button" 
+                      className="btn btn-outline" 
+                      onClick={() => { setShowForm(false); }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
 
-          {showForm && (
-            <div className="card mb-4">
-              <h2>New Student</h2>
-              <form onSubmit={handleStudentSubmit}>
-                <div className="form-group">
-                  <label>Name</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={studentForm.name}
-                    onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    className="input"
-                    value={studentForm.email}
-                    onChange={(e) => setStudentForm({ ...studentForm, email: e.target.value })}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary" disabled={saving}>
-                  {saving ? 'Creating...' : 'Create'}
-                </button>
-              </form>
-            </div>
-          )}
+            {fetching && <div className="spinner"></div>}
 
-          {fetching && <div className="spinner"></div>}
-
-          {!fetching && (
-            <div className="card">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((student) => (
-                    <tr key={student.id}>
-                      <td>{student.name}</td>
-                      <td>{student.email}</td>
-                      <td>{student.role}</td>
-                      <td>
-                        <button 
-                          onClick={() => handleDeleteStudent(student.id)} 
-                          className="btn btn-danger"
-                          style={{ padding: '4px 8px', fontSize: '12px' }}
-                        >
-                          Delete
-                        </button>
-                      </td>
+            {!fetching && (
+              <div className="card">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </>
-      )}
+                  </thead>
+                  <tbody>
+                    {students.map((student) => (
+                      <tr key={student.id}>
+                        <td>{student.name}</td>
+                        <td>{student.email}</td>
+                        <td>
+                          <span className={`priority-badge priority-${student.role === 'ADMIN' ? 'high' : 'low'}`}>
+                            {student.role}
+                          </span>
+                        </td>
+                        <td>
+                          <button 
+                            onClick={() => handleDeleteStudent(student.id)} 
+                            className="btn btn-danger"
+                            style={{ padding: '6px 12px', fontSize: 13 }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

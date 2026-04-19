@@ -38,7 +38,7 @@ export const DashboardPage: React.FC = () => {
   }, [user]);
 
   if (loading || !user) {
-    return <div className="spinner"></div>;
+    return <div className="app-container"><div className="spinner"></div></div>;
   }
 
   if (!user) {
@@ -48,20 +48,31 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="app-container">
       <Header showAdminLink />
-      <h1>Welcome, {user.name}!</h1>
-      <p className="text-muted mb-4">Here are the latest announcements for your class:</p>
-
-      {fetching && <div className="spinner"></div>}
-
-      {!fetching && announcements.length === 0 && (
-        <div className="card" style={{ textAlign: 'center' }}>
-          <p className="text-muted">No announcements yet.</p>
+      <div className="fade-in">
+        <div className="flex flex-between mb-4" style={{ alignItems: 'baseline' }}>
+          <div>
+            <h1>Welcome, {user.name.split(' ')[0]}!</h1>
+            <p className="text-muted">Here are the latest announcements for your class:</p>
+          </div>
         </div>
-      )}
 
-      {!fetching && announcements.map((announcement) => (
-        <AnnouncementCard key={announcement.id} announcement={announcement} />
-      ))}
+        {fetching && <div className="spinner"></div>}
+
+        {!fetching && announcements.length === 0 && (
+          <div className="card empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: 64, height: 64, margin: '0 auto 16px', opacity: 0.3 }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p className="text-muted">No announcements yet.</p>
+          </div>
+        )}
+
+        {!fetching && announcements.map((announcement, index) => (
+          <div key={announcement.id} style={{ animationDelay: `${index * 0.05}s` }} className="fade-in">
+            <AnnouncementCard announcement={announcement} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

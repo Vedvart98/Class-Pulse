@@ -28,7 +28,7 @@ public class DataInitializer {
 
                 User admin = User.builder()
                         .email("admin@college.edu")
-                        .name("Admin User")
+                        .name("Admin")
                         .role(Role.ADMIN)
                         .build();
                 userRepository.save(admin);

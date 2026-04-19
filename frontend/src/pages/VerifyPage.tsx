@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Header } from '../components/Header';
 
 export const VerifyPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -29,7 +28,7 @@ export const VerifyPage: React.FC = () => {
           role: response.data.role,
         });
         setStatus('success');
-        setMessage('Login successful! Redirecting...');
+        setMessage('Login successful!');
         setTimeout(() => navigate('/dashboard'), 1500);
       } catch (err: any) {
         setStatus('error');
@@ -41,22 +40,36 @@ export const VerifyPage: React.FC = () => {
   }, [searchParams, navigate, login]);
 
   return (
-    <div className="app-container">
-      <Header />
-      <div className="card" style={{ maxWidth: '400px', margin: '40px auto', textAlign: 'center' }}>
+    <div className="auth-page">
+      <div className="auth-card fade-in">
         {status === 'loading' && (
           <>
-            <div className="spinner" style={{ margin: '0 auto 16px' }}></div>
-            <p>Verifying your magic link...</p>
+            <div className="spinner" style={{ margin: '0 auto 24px' }}></div>
+            <p className="text-muted text-center">Verifying your magic link...</p>
           </>
         )}
         {status === 'success' && (
-          <div className="alert alert-success">{message}</div>
+          <>
+            <div className="success-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-center">You're in!</h2>
+            <p className="text-muted text-center">{message}</p>
+            <p className="text-small text-muted text-center mt-2">Redirecting to dashboard...</p>
+          </>
         )}
         {status === 'error' && (
           <>
-            <div className="alert alert-error">{message}</div>
-            <a href="/login" className="btn btn-primary" style={{ marginTop: '16px' }}>
+            <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: 32, height: 32, color: '#EF4444' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h2 className="text-center">Verification Failed</h2>
+            <p className="text-muted text-center mb-4">{message}</p>
+            <a href="/login" className="btn btn-primary w-full">
               Back to Login
             </a>
           </>

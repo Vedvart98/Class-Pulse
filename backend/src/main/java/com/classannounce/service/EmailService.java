@@ -20,8 +20,7 @@ public class EmailService {
     public void sendMagicLink(String email, String token) {
         String magicLink = baseUrl + "/verify?token=" + token;
 
-        // For development: log the magic link instead of sending email
-        if (isDevelopmentMode()) {
+        if (Boolean.parseBoolean(System.getProperty("mail.dev-mode", "false"))) {
             log.info("=== DEV MODE: Magic Link ===");
             log.info("Email: {}", email);
             log.info("Link: {}", magicLink);
@@ -50,14 +49,7 @@ public class EmailService {
         }
     }
 
-    private boolean isDevelopmentMode() {
-        return System.getProperty("mail.debug", "false").equals("true") 
-            || System.getenv("MAIL_USERNAME") == null 
-            || System.getenv("MAIL_USERNAME").isEmpty();
-    }
-
     private String getFromAddress() {
-        String username = System.getenv("MAIL_USERNAME");
-        return username != null && !username.isEmpty() ? username : "noreply@classannounce.edu";
+        return "noreply@classannounce.edu";
     }
 }

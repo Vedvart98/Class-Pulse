@@ -1,0 +1,15 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]: ClassAnnounce
+  - generic [ref=e6]:
+    - heading "Welcome to ClassAnnounce" [level=2] [ref=e7]
+    - paragraph [ref=e8]: Enter your email to receive a magic link for passwordless login
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Email Address
+        - textbox "student@college.edu" [ref=e12]
+      - button "Send Magic Link" [ref=e13] [cursor=pointer]
+    - paragraph [ref=e14]:
+      - text: Don't have an account?
+      - link "Register here" [ref=e15] [cursor=pointer]:
+        - /url: /register

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { userApi } from '../services/api';
-import { Header } from '../components/Header';
 
 export const RegistrationPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -31,34 +30,33 @@ export const RegistrationPage: React.FC = () => {
 
   if (success) {
     return (
-      <div className="app-container">
-        <Header />
-        <div className="card" style={{ maxWidth: '400px', margin: '40px auto', textAlign: 'center' }}>
-          <div style={{ padding: '16px', background: '#F0FDF4', borderRadius: '8px' }}>
-            <p style={{ fontWeight: 500, marginBottom: '8px', color: '#166534', fontSize: '18px' }}>
-              ✓ Registration Successful!
-            </p>
-            <p className="text-muted">
-              Your account has been created. Go to login to receive a magic link.
-            </p>
-            <Link to="/login" className="btn btn-primary" style={{ display: 'inline-block', marginTop: '16px' }}>
-              Go to Login
-            </Link>
+      <div className="auth-page">
+        <div className="auth-card fade-in">
+          <div className="success-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
           </div>
+          <h2 className="text-center">Account Created!</h2>
+          <p className="text-muted text-center mb-4">
+            Your account for <strong>{email}</strong> has been created.
+          </p>
+          <p className="text-small text-muted text-center">
+            Go to login to receive your magic link.
+          </p>
+          <Link to="/login" className="btn btn-primary w-full mt-4">
+            Go to Login
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="app-container">
-      <Header />
-      <div className="card" style={{ maxWidth: '400px', margin: '40px auto' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Create Account</h2>
-        
-        <p className="text-muted" style={{ textAlign: 'center', marginBottom: '24px' }}>
-          Register to receive announcements via email magic link
-        </p>
+    <div className="auth-page">
+      <div className="auth-card fade-in">
+        <h2 className="auth-logo">ClassAnnounce</h2>
+        <p className="auth-subtitle">Create your account to get started.</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
@@ -72,6 +70,7 @@ export const RegistrationPage: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -81,22 +80,23 @@ export const RegistrationPage: React.FC = () => {
               className="input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="student@college.edu"
+              placeholder="you@example.com"
               required
+              disabled={loading}
             />
           </div>
           <button 
             type="submit" 
-            className="btn btn-primary" 
-            style={{ width: '100%' }}
+            className="btn btn-primary w-full" 
             disabled={loading}
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="text-small text-muted" style={{ textAlign: 'center', marginTop: '16px' }}>
-          Already have an account? <Link to="/login">Login here</Link>
+        <p className="text-small text-muted text-center mt-4">
+          Already have an account?{' '}
+          <Link to="/login" className="link">Sign in</Link>
         </p>
       </div>
     </div>

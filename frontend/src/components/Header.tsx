@@ -14,14 +14,32 @@ export const Header: React.FC<HeaderProps> = ({ showAdminLink }) => {
       <div className="header-user">
         {user && (
           <>
-            <span className="text-muted">{user.name}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div 
+                style={{ 
+                  width: 36, 
+                  height: 36, 
+                  borderRadius: '50%', 
+                  background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  color: 'white'
+                }}
+              >
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-muted">{user.name}</span>
+            </div>
             {showAdminLink && user.role === 'ADMIN' && (
-              <a href="/admin" className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '12px' }}>
-                Admin Panel
+              <a href="/admin" className="btn btn-ghost">
+                Admin
               </a>
             )}
-            <button onClick={logout} className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '12px' }}>
-              Logout
+            <button onClick={logout} className="btn btn-ghost">
+              Sign Out
             </button>
           </>
         )}
