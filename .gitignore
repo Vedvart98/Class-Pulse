@@ -50,10 +50,11 @@ build/
 # =====================/
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
+gradle/wrapper/gradle-wrapper.jar
+**/src/main/**/build/
+**/src/test/**/build/
+backend/src/main/resources/application.properties.dev
+backend/src/main/**/DataInitializerDev.java
 # ========================
 # Backend - Java
 # ========================
